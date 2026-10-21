@@ -3,21 +3,31 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0 <23.0.0 || >=24.0.0 <25.0.0"
+  },
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "vitest run src",
     "test:e2e": "playwright test",
-    "data:generate": "node scripts/generate-data.mjs"
+    "data:generate": "node scripts/generate-data.mjs",
+    "rayfin:login": "rayfin login",
+    "rayfin:deploy": "rayfin up --workspace-id 6d6350e8-6f22-4a8b-b06a-eb4a3b68dd23 --item-name \"Mortgage Overview App\"",
+    "rayfin:status": "rayfin up status"
   },
   "dependencies": {
+    "@microsoft/rayfin-client": "^1.36.2",
+    "@microsoft/rayfin-core": "^1.36.2",
+    "@microsoft/rayfin-data": "^1.36.2",
     "d3-geo": "^3.1.1",
     "lucide-react": "^0.468.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@microsoft/rayfin-cli": "^1.36.2",
     "@playwright/test": "^1.58.0",
     "@types/d3-geo": "^3.1.0",
     "@types/geojson": "^7946.0.16",

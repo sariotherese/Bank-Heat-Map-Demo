@@ -118,7 +118,7 @@ test('methodology preserves target workspace and keyboard focus', async ({ page 
   const trigger = page.getByRole('button', { name: 'Data & methodology' });
   await trigger.click();
   const dialog = page.getByRole('dialog');
-  await expect(dialog).toContainText('not a Rayfin-native artifact');
+  await expect(dialog).toContainText('Rayfin publishing configuration is included');
   await expect(dialog).toContainText('Eximbank Demo');
   await expect(dialog.getByRole('link', { name: 'Open target Fabric workspace' })).toHaveAttribute('href', /6d6350e8-6f22-4a8b-b06a-eb4a3b68dd23.*subfolderId=102243/);
   await page.keyboard.press('Shift+Tab');

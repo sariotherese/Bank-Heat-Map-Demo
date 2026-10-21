@@ -2,11 +2,11 @@
 
 Eximbank-branded mortgage intelligence demonstration for Ho Chi Minh City. Includes interactive district choropleths, four KPI cards, area portfolio previews on hover or keyboard focus, pinned district selection, borrower profiles, opportunity ranking, district search, a comparison table and scoped CSV export. The map supports zoom, drag-to-pan, label toggling and reset. The layout adapts to desktop and mobile.
 
-**Status:** standalone React application, ready to build and host. **Not published to Fabric and not a Rayfin-native application.** No authenticated Fabric/Rayfin tooling was available during implementation. No Fabric item has been created or saved.
+**Status:** React application with official Rayfin CLI publishing configuration in `rayfin/rayfin.yml`. **Not published to Fabric.** Publishing from the implementation session was blocked because Microsoft sign-in (`login.microsoftonline.com`) and the Fabric API (`api.fabric.microsoft.com`) could not be resolved. No Fabric item has been created or saved.
 
 ## Run
 
-Requires Node.js 22+ and npm.
+Requires Node.js 22 or 24 LTS and npm; Rayfin CLI 1.36.2 does not support Node.js 26. `.nvmrc` selects Node.js 22.
 
 ```sh
 npm ci
@@ -72,14 +72,34 @@ Requested destination:
 
 [Open the supplied Fabric destination](https://app.fabric.microsoft.com/groups/6d6350e8-6f22-4a8b-b06a-eb4a3b68dd23/list?experience=fabric-developer&subfolderId=102243).
 
-The URL and folder ID are recorded as supplied, **not verified against Fabric**. This repository does not contain a Fabric item definition, Rayfin SDK dependency or an importable Rayfin package. A React static bundle cannot simply be uploaded as a native Fabric application.
+The URL and folder ID are recorded as supplied, **not verified against Fabric**. The official `@microsoft/rayfin-cli` is installed. Its in-place initializer generated `rayfin/rayfin.yml`, configuring `npm run build`, the `dist/` static hosting directory, Fabric authentication and **protected** static asset access. The data service is disabled: this demonstration uses its bundled synthetic records, not a provisioned database.
 
-Manual integration requires an authorized operator:
+### Publish from an authorized, network-connected environment
 
-1. Open the target workspace and confirm that the supplied folder ID resolves to **Eximbank Demo**, and that the required Fabric/Rayfin workload is installed and authorized.
-2. Build and host `dist/` on an organization-approved HTTPS host if that workload explicitly supports external web applications. Otherwise use this app as the UI specification and implement the same views through the documented Rayfin-native application format. The required SDK, packaging and embedding support must be confirmed with the actual Rayfin environment; no unsupported API or import procedure is assumed here.
-3. If a Fabric data connection is needed, ingest `public/data/districts.csv` into the chosen Lakehouse/Warehouse using the supported Fabric ingestion flow. Keep integer counts and VND balances numeric, `propensity` decimal, and preserve `id`, `snapshot` and `synthetic`. The standalone demo continues to read its bundled JSON until a documented, authenticated adapter is implemented.
-4. Through the workload's supported publish flow, create the application named **Mortgage Overview App** and save/move it to the verified **Eximbank Demo** folder.
-5. Verify the resulting item URL, viewer permissions, data access, hover portfolios, map interactions and synthetic-data notices inside Fabric before sharing it.
+Use a trusted machine that can reach Microsoft Entra sign-in and the Fabric API. Sign in with an account authorized to create items in the target workspace. Do not paste passwords, access tokens or client secrets into chat or commit them.
 
-There are intentionally no credentials, fabricated Fabric deployment scripts or claims of a completed Fabric publish in this project.
+```sh
+# Select Node.js 22 using your normal runtime manager first.
+npm ci
+npm run rayfin:login
+npm run rayfin:deploy
+npm run rayfin:status
+```
+
+The deploy script executes the supported command:
+
+```sh
+npx rayfin up --workspace-id 6d6350e8-6f22-4a8b-b06a-eb4a3b68dd23 --item-name "Mortgage Overview App"
+```
+
+`rayfin up` builds and publishes the app; `rayfin up status` checks the deployment. Confirm the resulting item and hosting URLs before sharing. Provisioning may require Fabric capacity, tenant enablement or administrator consent; those requirements must be checked in the actual tenant.
+
+**Folder placement is a separate step:** Rayfin CLI 1.36.2 exposes workspace and item-name options, but no folder option. After publishing, use the Fabric portal's supported move action to place the item in **Eximbank Demo**. Confirm the folder name and supplied ID rather than assuming the URL's `subfolderId` is a valid REST API folder identifier.
+
+The CLI stores deployment metadata in `rayfin/.deployments.json` and generated runtime settings in `rayfin/.env`; these are ignored by git. On systems without an OS keychain, Rayfin requires explicit opt-in to plaintext token storage. Prefer signing in on a trusted desktop with its keychain; no plaintext fallback or credential collection was enabled in this session.
+
+The installed Rayfin context in `AGENTS.md` and `.agents/skills/` explains how to find version-matched package documentation. The official initializer also generated the optional `.mcp.json` integration.
+
+If a Fabric data connection is later needed, ingest `public/data/districts.csv` through the supported Fabric ingestion flow. Keep integer counts and VND balances numeric, `propensity` decimal, and preserve `id`, `snapshot` and `synthetic`. A production database/client integration and Fabric-hosted end-to-end authentication still require validation against the live tenant.
+
+There are intentionally no credentials or claims of a completed Fabric publish in this project.

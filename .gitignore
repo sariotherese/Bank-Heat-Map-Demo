@@ -4,3 +4,8 @@ test-results/
 playwright-report/
 *.local
 *.tsbuildinfo
+.env
+.env.*
+!.env.example
+rayfin/.env*
+rayfin/.deployments.json
