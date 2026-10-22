@@ -6,7 +6,9 @@ Eximbank-branded mortgage intelligence demonstration for Ho Chi Minh City. Inclu
 
 ## Run
 
-Requires Node.js 22 or 24 LTS and npm; Rayfin CLI 1.36.2 does not support Node.js 26. `.nvmrc` selects Node.js 22.
+The React application supports Node.js 22, 24 or 26 and npm. `.nvmrc` selects Node.js 26 for application development, builds and tests.
+
+**Fabric publishing uses separate tooling:** Rayfin CLI 1.36.2, including the latest published version at the time of this change, declares support for Node.js 20, 22 and 24 only. Installing dependencies on Node.js 26 can emit an `EBADENGINE` warning for that CLI; strict engine enforcement will reject the install. Do not disable engine enforcement to bypass this restriction. Use Node.js 22 or 24 for Fabric login, deployment and status checks. Application compatibility with Node.js 26 does not add Node.js 26 support to Microsoft's CLI.
 
 ```sh
 npm ci
@@ -79,7 +81,7 @@ The URL and folder ID are recorded as supplied, **not verified against Fabric**.
 Use a trusted machine that can reach Microsoft Entra sign-in and the Fabric API. Sign in with an account authorized to create items in the target workspace. Do not paste passwords, access tokens or client secrets into chat or commit them.
 
 ```sh
-# Select Node.js 22 using your normal runtime manager first.
+# Select Node.js 22 or 24 using your normal runtime manager first.
 npm ci
 npm run rayfin:login
 npm run rayfin:deploy
